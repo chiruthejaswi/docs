@@ -1,0 +1,68 @@
+---
+title: "New file"
+description: "Description of your new file."
+---
+
+````markdown
+---
+title: How to Use Waves Text-to-Speech
+description: Convert written prompts into natural audio in a single call.
+---
+
+Waves Text-to-Speech (TTS) turns any UTF-8 text into lifelike audio in seconds. Use it to narrate UI text, generate product voice-overs, or prototype multimodal assistants without managing audio pipelines yourself.
+
+## Endpoint
+
+| Method | URL |
+| --- | --- |
+| `POST` | `https://api.waves.smallest.ai/v4/tts` |
+
+## Required Headers
+
+- `Authorization: Bearer <WAVES_API_KEY>`
+- `Content-Type: application/json`
+
+## Request Body
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `text` | string | ✅ | Text to render (≤ 5000 chars). |
+| `voice` | string | ✅ | Voice preset ID, e.g. `en-US-luna`. |
+| `speed` | number | optional | Playback rate (0.5–2.0, default `1`). |
+| `format` | string | optional | Audio container; `mp3`, `wav`, `ogg` (default `mp3`). |
+
+## Sample Request (curl)
+
+```bash
+curl -X POST https://api.waves.smallest.ai/v4/tts \
+  -H "Authorization: Bearer $WAVES_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Welcome to Waves! Let us speak for your product.",
+    "voice": "en-US-luna",
+    "speed": 1.05,
+    "format": "mp3"
+  }'
+```
+
+## Sample Response
+
+```json
+{
+  "request_id": "req_91ff7b62f4bc4c08",
+  "duration_ms": 2380,
+  "audio": {
+    "format": "mp3",
+    "bytes": "base64-encoded-audio",
+    "url": "https://cdn.waves.smallest.ai/audio/req_91ff7b62f4bc4c08.mp3",
+    "expires_at": "2025-11-18T12:00:00Z"
+  },
+  "voice": "en-US-luna"
+}
+```
+
+## Usage Tip
+
+Cache the `audio.url` (or decoded bytes) in your app—each identical `text + voice + speed` combo costs another request if you re-render it.
+
+````
